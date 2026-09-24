@@ -65,7 +65,10 @@ services:
 
 
   citas-web-dev:
-    image: node:24-alpine
+    build:
+      context: ./citas-web
+      dockerfile: Dockerfile.dev
+    image: fcv-citas-web-dev:local
     container_name: fcv-citas-web-dev
     restart: unless-stopped
 
