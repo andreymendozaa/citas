@@ -29,6 +29,26 @@ services:
       retries: 30
       start_period: 20s
 
+  mysql-test-bootstrap:
+    image: mysql:8.4
+    restart: "no"
+
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    command:
+      - sh
+      - -ec
+      - >-
+        mysql --protocol=tcp -h mysql -uroot -p"$${MYSQL_ROOT_PASSWORD}" -e
+        "CREATE DATABASE IF NOT EXISTS \`$${MYSQL_DATABASE}_test\`; GRANT ALL PRIVILEGES ON \`$${MYSQL_DATABASE}_test\`.* TO '$${MYSQL_USER}'@'%'; FLUSH PRIVILEGES;"
+
 
   citas-api-dev:
     image: maven:3.9-eclipse-temurin-21
@@ -47,6 +67,9 @@ services:
       DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
+      TEST_DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}_test
+      TEST_DB_USER: ${MYSQL_USER}
+      TEST_DB_PASSWORD: ${MYSQL_PASSWORD}
 
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
