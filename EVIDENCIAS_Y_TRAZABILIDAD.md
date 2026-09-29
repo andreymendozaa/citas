@@ -35,11 +35,12 @@ Evidencia adicional:
 ## n8n evaluable
 Los JSON exportados deben abrir/importar sin depender de secretos embebidos. Las credenciales se configuran en n8n y nunca deben formar parte del JSON/repositorio en texto claro.
 
-## Registro técnico S4 — Incremento 0 en curso · 2026-09-29
+## Registro técnico S4 — Incremento 0 verificado, sin cierre de HU · 2026-09-29
 
 - Repositorios: `citas-api` y `citas-web`, rama `develop`.
 - Evidencia backend: `mvn test` contra MySQL de desarrollo con 19 pruebas verdes; incluye reserva concurrente con un único `APPROVED` y un conflicto, aprobación/rechazo con historial, retención/liberación de slots, edición/eliminación de bloques futuros, profesional/sede/especialidad inválidos, catálogo de profesionales con asignaciones, autorización de rutas S3 y contrato MockMvc para reserva general/especializada y decisión administrativa.
 - Evidencia frontend: `npm run lint`, `npm test` (16 pruebas) y `npm run build` verdes; se cubren payload REST de reserva y de bloques, adaptación de slots API a profesionales, mensajes `403`/`409`, confirmación `APPROVED`, vista ADMIN sin datos de acceso y edición de bloques PROFESSIONAL.
 - Builder/Verifier: el Verifier reutilizable se ejecuta inmediatamente después de cada Prompt. Prompt 0 (núcleo y concurrencia) PASS: 14 pruebas Maven y 11 Vitest; Prompt 1 (contrato de bloques) PASS: 12 Vitest; Prompt 2 (DTO ADMIN pendiente) PASS: 14 Maven y 12 Vitest; Prompt 3 (confirmación USER) PASS: 13 Vitest; Prompt 4 (hook frontend) PASS; Prompt 5 (reglas de agenda) PASS: 16 pruebas Maven; Prompt 6 (contratos y pantallas por rol) PASS: 17 Maven y 16 Vitest; Prompt 7 (roles y selecciones inválidas) PASS: 18 Maven; Prompt 8 (compatibilidad de rutas S3) PASS: 19 Maven.
+- Red → Green: `concurrentReservationsProduceExactlyOneAppointmentAndOneConflict` se incorporó inicialmente como caso rojo al revelar que las reservas concurrentes podían confirmar los mismos slots; la actualización condicional de slots dentro de la transacción dejó exactamente un `APPROVED` y un conflicto. La prueba pasó en la suite Maven posterior.
 - Calidad: el hook backend bloqueó un secreto sintético y luego pasó con la suite Maven. El hook frontend bloqueó `src/secret-hook-demo.env`, el archivo fue retirado y luego pasó con lint, pruebas y build. `citas-web/Dockerfile.dev` instala Git para que el detector staged sea reproducible.
-- Pendiente: ampliar cobertura de roles, decisiones, historial y flujos manuales cross-repo antes de cerrar HU o declarar el Incremento 0 completado.
+- Alcance: el cierre es técnico; no se declaran HU como completadas. Los CA/DoD integrales de HU-003, HU-004, HU-011 y HU-014 a HU-024 se mantienen sujetos a su auditoría funcional correspondiente.
