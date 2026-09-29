@@ -6,8 +6,8 @@ START TRANSACTION;
 INSERT INTO specialties(code, name, appointment_duration_minutes, is_general, requires_admin_approval, active)
 VALUES
   ('LAB_MEDICINA_GENERAL', 'Medicina General Laboratorio', 30, TRUE, FALSE, TRUE),
-  ('LAB_CARDIOLOGIA', 'Cardiología Laboratorio', 60, FALSE, TRUE, TRUE),
-  ('LAB_DERMATOLOGIA', 'Dermatología Laboratorio', 30, FALSE, TRUE, TRUE)
+  ('LAB_CARDIOLOGIA', CONVERT(0x43617264696F6C6F67C3AD61204C61626F7261746F72696F USING utf8mb4), 60, FALSE, TRUE, TRUE),
+  ('LAB_DERMATOLOGIA', CONVERT(0x4465726D61746F6C6F67C3AD61204C61626F7261746F72696F USING utf8mb4), 30, FALSE, TRUE, TRUE)
 ON DUPLICATE KEY UPDATE
   name = VALUES(name),
   appointment_duration_minutes = VALUES(appointment_duration_minutes),
