@@ -51,6 +51,15 @@ Archivos nuevos en `src/components/`:
 
 ## Qué falta (en orden recomendado)
 
+0. **Auditoría del 2026-09-30.** Detalle en la wiki `traceability.md` y en `scrum/README.md`. Estado global: 17 HU `Completada`, 14 `En desarrollo`.
+   - **Pruebas dedicadas faltantes:** cancelación y reprogramación (HU-026 a HU-028); guardas de HU-014, 015, 016, 018, 019, 020, 023 y 024.
+   - **Brechas funcionales:**
+     - afiliación después del registro (HU-011);
+     - catálogo de estados de reprogramación (HU-003);
+     - filtro por tipo general/especializada (HU-021);
+     - edición de especialidades y reasignación de profesionales en la UI (HU-014/016);
+     - Actuator.
+   - **Pendiente de decisión del usuario:** el repositorio raíz `citas` está publicado, en conflicto con la restricción de dos repos públicos.
 1. **S5**:
    - Swagger/OpenAPI con `springdoc-openapi-starter-webmvc-ui` 2.8.13.
    - Crear `current-state.md` en la raíz.
