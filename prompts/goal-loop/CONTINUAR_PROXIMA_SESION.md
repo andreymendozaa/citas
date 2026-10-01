@@ -45,21 +45,18 @@ Archivos nuevos en `src/components/`:
 
 **Documentación en `citas-api`.** Se actualizaron las HU de `docs/FCV Dev/scrum/historias-de-usuario/` y, en la wiki, `contracts.md`, `log.md`, `index.md` y `risks-open-questions.md`.
 
-**Commits locales.** Hay uno en `citas-web` (feat) y otro en `citas-api` (docs). **Revisa con `git status`/`git log` si ya se empujaron.** El push requiere que el usuario lo ejecute, porque no hay credential helper.
+**Commits.** Todo está empujado a `origin/develop` en los tres repos. El agente puede hacer push de `develop` con el Git Credential Manager de GitHub Desktop (ver memoria `git-exe-location`); antes de subir a `main` o forzar un push, debe preguntar.
 
 **BD de desarrollo.** Durante la validación se aplicó `database/seed-lab-scheduling.sql` y se reasignó localmente la contraseña de las cuentas `lab.*@citas.test`, porque el hash del seed no coincide con la contraseña documentada `Demo1234*`. Queda como riesgo en la wiki. También se creó la cuenta auxiliar `lab.tmp.hash@citas.test` y la cita sintética pasada "LAB: cita pasada por cerrar".
 
 ## Qué falta (en orden recomendado)
 
-0. **Auditoría del 2026-09-30.** Detalle en la wiki `traceability.md` y en `scrum/README.md`. Estado global: 17 HU `Completada`, 14 `En desarrollo`.
-   - **Pruebas dedicadas faltantes:** cancelación y reprogramación (HU-026 a HU-028); guardas de HU-014, 015, 016, 018, 019, 020, 023 y 024.
-   - **Brechas funcionales:**
-     - afiliación después del registro (HU-011);
-     - catálogo de estados de reprogramación (HU-003);
-     - filtro por tipo general/especializada (HU-021);
-     - edición de especialidades y reasignación de profesionales en la UI (HU-014/016);
-     - Actuator.
+0. **Requerimientos funcionales cerrados (2026-09-30).** La auditoría y su cierre están en la wiki `traceability.md` y en `scrum/README.md`.
+   - **Estado global:** 31 HU `Completada`; RF-01 a RF-19 implementados y probados (Maven 66/66, Vitest 44/44). Las pruebas nuevas corrigieron 4 errores 500 y la edición/eliminación de bloques pasados.
+   - **Pendientes:** HU-004/RF-20 (OpenAPI, S5), HU-033 (en progreso) y HU-034 a 036 (n8n, S5/S6).
+   - **Mejoras menores fuera de los CA:** editar nombre y duración de especialidades en la UI, y Actuator.
    - **Pendiente de decisión del usuario:** el repositorio raíz `citas` está publicado, en conflicto con la restricción de dos repos públicos.
+   - **Entorno:** tras editar `citas-web` hay que reiniciar `npm run dev`, porque Vite en Docker/Windows no detecta los cambios. Las pruebas Maven usan un pool Hikari de 3 para no exceder `max_connections`.
 1. **S5**:
    - Swagger/OpenAPI con `springdoc-openapi-starter-webmvc-ui` 2.8.13.
    - Crear `current-state.md` en la raíz.
