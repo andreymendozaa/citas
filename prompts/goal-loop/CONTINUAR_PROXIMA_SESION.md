@@ -10,66 +10,112 @@ Lee primero, en este orden:
 3. `citas-api/AGENTS.md`
 4. `citas-web/AGENTS.md`
 5. `citas-api/docs/FCV Dev/llm-wiki/wiki/index.md`
+6. `citas-api/docs/FCV Dev/llm-wiki/wiki/traceability.md` (auditoría y cierre del 2026-09-30)
 
 Esos archivos son la fuente de verdad. Este prompt es solo un resumen operativo de continuidad y no los reemplaza.
 
+**Idioma:** toda la retroalimentación y las preguntas al usuario van en español. Los mensajes de commit siguen en inglés, como el historial existente.
+
 ## Estado al cierre de la sesión del 2026-09-30
 
-**S4 cerrado.** Backend y frontend de los Incrementos 1 y 3 están completos:
-- HU-008, HU-009, HU-010, HU-012 y HU-013 en `Completada`.
-- HU-029, HU-030, HU-031 y HU-032 en `Completada`.
+### Resumen
+- **S4 cerrado y todos los requerimientos funcionales del PRD (RF-01 a RF-19) implementados y probados.**
+- 31 de 36 HU en `Completada`.
+- Pruebas: Maven 66/66 y Vitest 44/44 con lint y build en verde.
+- Todo está empujado a `origin/develop` en los tres repos.
 
-**Frontend (`citas-web`, rama `develop`).** Se añadieron, sin cambios de contrato ni de backend:
-- Pantallas de recuperación y restablecimiento de contraseña. El token puede llegar por `?token=`, que se retira de la URL al cargar.
-- Pestañas por rol en el dashboard:
-  - USER: Mis citas | Mi perfil.
-  - PROFESSIONAL: Agenda | Disponibilidad.
-  - ADMIN: Bandeja | Oferta | EPS y planes.
-- Agenda Día/Semana con cierre `COMPLETED`/`NO_SHOW`.
-- Bandeja unificada `/admin/inbox`, que reemplaza `pending-specialized` en el cliente.
-- Historial de estados por cita, visible para los tres roles.
+| Repo | Último commit |
+|---|---|
+| `citas` | el commit que guarda este archivo (`docs: full continuation prompt…`; ver `git log`) |
+| `citas-api` | `76b4f84` feat(hu-011): consult and change the user's insurance affiliation; seed regimes (V5) |
+| `citas-web` | `940e1a3` feat(hu-011): "Mi afiliación" section in the user profile |
 
-Archivos nuevos en `src/components/`:
-- `PasswordRecoveryScreens.tsx`
-- `ProfileTab.tsx`
-- `InsuranceAdminTab.tsx`
-- `ProfessionalAgendaTab.tsx`
-- `AdminInboxTab.tsx`
-- `AppointmentHistory.tsx`
-- `format.ts`
-- `s4Screens.test.tsx`
+### Lo realizado el 2026-09-30 (en orden)
+1. **Frontend consolidado de S4** (HU-008/009/010/012/013/029/030/031/032):
+   - recuperación y restablecimiento de contraseña;
+   - perfil;
+   - EPS y planes;
+   - agenda profesional con cierre de atención;
+   - bandeja ADMIN unificada;
+   - historial de estados;
+   - pestañas por rol en el dashboard.
+2. **Revisión integral de requerimientos y auditoría Scrum** de HU-003, 004 y 014 a 028.
+   - Criterio: un CA es PASS solo con prueba automatizada o propiedad estructural.
+   - El informe completo está en la wiki (`traceability.md`).
+3. **Pruebas dedicadas y corrección de bugs, siguiendo Red → Green:**
 
-**Evidencia.**
-- `npm run lint`, `npm test` (34/34) y `npm run build` en verde.
-- Validación manual en Chrome contra el backend en Docker con perfil `local`.
+   | Clase de prueba | HU | Bug corregido |
+   |---|---|---|
+   | `AppointmentLifecycleIntegrationTest` | HU-026 a 028 | 3 errores 500 |
+   | `SpecializedDecisionIntegrationTest` | HU-023/024 | 1 error 500 |
+   | `OfferAndAgendaRulesIntegrationTest` | HU-014 a 020 | Bloques pasados editables y eliminables |
+   | `FixedCatalogsIntegrationTest` | HU-003 | — |
 
-**Documentación en `citas-api`.** Se actualizaron las HU de `docs/FCV Dev/scrum/historias-de-usuario/` y, en la wiki, `contracts.md`, `log.md`, `index.md` y `risks-open-questions.md`.
-
-**Commits.** Todo está empujado a `origin/develop` en los tres repos. El agente puede hacer push de `develop` con el Git Credential Manager de GitHub Desktop (ver memoria `git-exe-location`); antes de subir a `main` o forzar un push, debe preguntar.
-
-**BD de desarrollo.** Durante la validación se aplicó `database/seed-lab-scheduling.sql` y se reasignó localmente la contraseña de las cuentas `lab.*@citas.test`, porque el hash del seed no coincide con la contraseña documentada `Demo1234*`. Queda como riesgo en la wiki. También se creó la cuenta auxiliar `lab.tmp.hash@citas.test` y la cita sintética pasada "LAB: cita pasada por cerrar".
+   Todos los errores 500 venían de `EmptyResultDataAccessException` sin manejar. Ya no queda ningún `queryForMap` en el backend.
+4. **Funcionales pequeñas:**
+   - `GET /catalogs/reschedule-statuses` (HU-003);
+   - `primarySpecialtyId` en `GET /admin/professionals`, más selector de primaria y editor de asignaciones en la UI (HU-016);
+   - filtro "Tipo de cita" en la reserva (HU-021).
+5. **HU-011 (afiliación).** El usuario aprobó ampliar el alcance a consultar y cambiar la afiliación, y sembrar los 5 regímenes de referencia.
+   - `GET/PUT /users/me/affiliation`, sin duplicar planes.
+   - Migración `V5__insurance_regimes_seed.sql`.
+   - Sección *Mi afiliación* en *Mi perfil*.
+   - Solo son seleccionables los planes activos de una EPS activa, también en `/catalogs/plans`.
 
 ## Qué falta (en orden recomendado)
 
-0. **Requerimientos funcionales cerrados (2026-09-30).** La auditoría y su cierre están en la wiki `traceability.md` y en `scrum/README.md`.
-   - **Estado global:** 31 HU `Completada`; RF-01 a RF-19 implementados y probados (Maven 66/66, Vitest 44/44). Las pruebas nuevas corrigieron 4 errores 500 y la edición/eliminación de bloques pasados.
-   - **Pendientes:** HU-004/RF-20 (OpenAPI, S5), HU-033 (en progreso) y HU-034 a 036 (n8n, S5/S6).
-   - **Mejoras menores fuera de los CA:** editar nombre y duración de especialidades en la UI, y Actuator.
-   - **Pendiente de decisión del usuario:** el repositorio raíz `citas` está publicado, en conflicto con la restricción de dos repos públicos.
-   - **Entorno:** tras editar `citas-web` hay que reiniciar `npm run dev`, porque Vite en Docker/Windows no detecta los cambios. Las pruebas Maven usan un pool Hikari de 3 para no exceder `max_connections`.
-1. **S5**:
-   - Swagger/OpenAPI con `springdoc-openapi-starter-webmvc-ui` 2.8.13.
+1. **S5:**
+   - Swagger/OpenAPI con `springdoc-openapi-starter-webmvc-ui` 2.8.13; cierra HU-004 y RF-20.
    - Crear `current-state.md` en la raíz.
-   - Activar el webhook real hacia n8n Cloud, conectándolo al puerto `Ports.AppointmentEvents` ya preparado y sin tocar `SchedulingJdbcAdapter`.
-2. **Deuda visual.** Las pantallas de S4 no tienen referencia Stitch/AI Studio aprobada; se construyeron extendiendo el estilo existente. Hay que decidir si pasan por el flujo `stitch-design-to-frontend`.
-3. **Seed de laboratorio.** Corregir `database/seed-lab-scheduling.sql` o `database/reference/README_DB.md` para que la contraseña documentada funcione.
-4. **Seguridad, lo hace el usuario:** revocar o dejar expirar el PAT de GitHub usado el 2026-09-29.
+   - WF-001 (recordatorios) exportado en JSON en `citas-api/automations/n8n/`; hoy solo existen especificaciones `.md`.
+   - Evidencia de MCP con n8n.
+   - Documento de riesgos residuales (contenido no confiable).
+2. **S6:**
+   - WF-002: webhook real hacia n8n, conectado al puerto ya preparado `Ports.AppointmentEvents`, sin tocar `SchedulingJdbcAdapter`.
+   - WF-003 (opcional).
+   - HU-033 (integración web, en progreso) y HU-034 a 036 (`Pendiente de aprobación`).
+3. **Entregables de evaluación:**
+   - Merge `develop → main` cuando el usuario lo decida; `main` sigue en S2 en los tres repos. **Confirmar antes.**
+   - Evidencia del LOOP propio del estudiante (`LOOP_03`) y sus logs.
+4. **Pendiente de decisión del usuario:**
+   - El repositorio raíz `citas` está publicado, en conflicto con "solo dos repos públicos" (`RESTRICCIONES_TECNICAS.md`) y con "No inicializar Git en la raíz" (`AGENTS.md`).
+   - Aprobación visual Stitch/AI Studio: no existe para ninguna pantalla; las de S4 se construyeron extendiendo el estilo existente.
+5. **Mejoras menores (fuera de los CA):**
+   - editar nombre y duración de especialidades en la UI;
+   - Actuator health;
+   - corregir `database/seed-lab-scheduling.sql` o `README_DB.md`, porque el hash no corresponde a `Demo1234*`.
+6. **Seguridad, lo hace el usuario:** revocar el PAT de GitHub expuesto el 2026-09-29.
+
+## Entorno y datos de prueba (BD de desarrollo)
+
+**Cuentas sintéticas** (contraseña reasignada localmente porque el hash del seed no coincide con la documentada):
+
+| Cuenta | Rol | Contraseña |
+|---|---|---|
+| `lab.admin@citas.test` | ADMIN | `LabDemo123*` |
+| `lab.cardio@citas.test` | PROFESSIONAL | `LabDemo123*` |
+| `lab.paciente@citas.test` | USER | `LabDemo123*` |
+| `lab.usuario@citas.test` | USER | `LabReset456*` (cambiada con el flujo de restablecimiento) |
+
+**Datos creados durante las validaciones:**
+- EPS `LAB-EPS-01` con el plan `LAB-CONTRIB-01`;
+- cita pasada "LAB: cita pasada por cerrar";
+- cuenta auxiliar `lab.tmp.hash@citas.test`.
 
 ## Instrucciones para el agente al retomar
 
 1. Confirmar con `git status`/`git log` en `citas`, `citas-api` y `citas-web` que no hay sorpresas.
-2. Verificar Docker (`docker compose ps`). Los contenedores `citas-api-dev` y `citas-web-dev` quedan inactivos (`tail -f /dev/null`), así que hay que levantarlos manualmente:
+2. **Git:**
+   - No hay `git` en el PATH; usar el `git.exe` de GitHub Desktop.
+   - Commits de `citas-api`/`citas-web`: hacerlos dentro de los contenedores, porque los hooks necesitan `mvn`/`npm`. Usar `git commit -F .git/<archivo>` con el archivo escrito con la herramienta Write, porque PowerShell 5.1 añade un BOM al canalizar.
+   - Push de `develop`: autorizado por el usuario, vía el Git Credential Manager de GitHub Desktop.
+   - Preguntar antes de subir a `main` o forzar un push.
+3. **Docker** (`docker compose ps`). Los contenedores `citas-api-dev` y `citas-web-dev` quedan inactivos (`tail -f /dev/null`), así que hay que levantarlos a mano:
    - Backend: `docker compose exec -e SPRING_PROFILES_ACTIVE=local citas-api-dev mvn spring-boot:run`
-   - Frontend: `docker compose exec citas-web-dev npm run dev`
-3. Para S5, usar `EnterPlanMode` antes de escribir código y confirmar con el usuario las decisiones ambiguas (URL y autenticación del webhook, eventos a emitir).
-4. Actualizar la wiki y la trazabilidad Scrum al cerrar cada HU.
+   - Frontend: `docker compose exec citas-web-dev npm run dev`. Tras editar `citas-web` hay que reiniciarlo: Vite en Docker/Windows no detecta los cambios.
+4. **Pruebas Maven:**
+   - La BD de pruebas es persistente. Toda prueba que cree citas `REQUESTED` debe resolverlas en un `@AfterEach`, aunque falle (patrón en `SpecializedDecisionIntegrationTest`).
+   - El pool Hikari de pruebas está limitado a 3 en `DatabaseIntegrationSupport`, para no exceder `max_connections`.
+   - El equipo va justo de memoria: evitar corridas completas redundantes, porque el hook del commit ya corre la suite.
+5. Para S5, usar `EnterPlanMode` antes de escribir código y confirmar con el usuario las decisiones ambiguas: URL y autenticación del webhook, eventos a emitir y credenciales de n8n/Gmail, que configura el usuario y nunca se versionan.
+6. Al cerrar cada HU, actualizar la wiki (`contracts.md`, `traceability.md`, `index.md`, `log.md`) y la trazabilidad Scrum (HU + `scrum/README.md`).
