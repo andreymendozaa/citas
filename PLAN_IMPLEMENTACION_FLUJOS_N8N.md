@@ -60,7 +60,7 @@
 | B1 | La API no expone el correo del paciente. | Todos los correos van a un buzón de laboratorio (`LAB_RECIPIENT_EMAIL`) fuera del JSON versionado. |
 | B4 | No hay agregado diario por estado; `upcoming` solo trae `APPROVED`. | WF-003 reporta `APPROVED` y pendientes de la bandeja; `COMPLETED`/`NO_SHOW`/`CANCELLED` se marcan "no disponible por contrato". |
 | B5 | n8n en la nube no alcanza `localhost:8080`. | Túnel temporal (Cloudflare quick tunnel) solo durante pruebas. **Pendiente:** la configuración de permisos del agente bloqueó abrirlo; lo abre el usuario o lo autoriza explícitamente. La URL del túnel cambia en cada arranque. |
-| B6 | HU-034 no fija la ventana; HU-036 no fija la hora. | Propuesta configurable: 24 h y 06:00 Bogotá, **pendiente de aprobación**. |
+| B6 | HU-034 no fija la ventana; HU-036 no fija la hora. | **DECISIÓN del usuario (2026-10-04):** ventana de 48 h y resumen diario a las 06:00 Bogotá; destinatario de laboratorio = Gmail personal del estudiante (solo configurado en n8n, nunca en el JSON). |
 | B7 | `$vars` (Variables) puede requerir licencia en la instancia. | Si no está disponible, se usa un nodo `Config` con marcadores `<<...>>` en el JSON exportado. |
 
 ## 4. Reglas comunes
@@ -100,7 +100,7 @@
 Topología: Schedule Trigger → Config → Health → Login → Consultar próximas → Filtrar/deduplicar → Construir correo → Gmail → Registrar resultado.
 
 1. **Schedule Trigger:** cada hora; zona del workflow `America/Bogota`.
-2. **Config:** `CITAS_API_BASE_URL`, `LAB_RECIPIENT_EMAIL` y `REMINDER_WINDOW_HOURS=24` (propuesto).
+2. **Config:** `CITAS_API_BASE_URL`, `LAB_RECIPIENT_EMAIL` y `REMINDER_WINDOW_HOURS=48` (aprobado).
 3. **Health:** `GET {base}/actuator/health`, timeout 5 s. Si falla, la rama de error registra "API no disponible" y termina sin enviar.
 4. **Login:** `POST {base}/api/v1/auth/login` con la credencial `Andrey – citas-api login` (body + `X-Requested-With`). Timeout 5 s, 2 reintentos / 3 s. Solo se conserva `accessToken`.
 5. **Consultar próximas:** `GET {base}/api/v1/admin/appointments/upcoming?from=<hoy>&to=<fecha de ahora+ventana>` con Bearer por expresión.
