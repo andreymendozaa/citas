@@ -7,7 +7,9 @@
 > - `appointmentsApi.availableDays`;
 > - `AvailabilityCalendar.tsx`.
 >
-> Hoy la reserva USER usa `GET /availability` por fecha dentro del modal existente. Implementarlo sería un cambio cross-repo aditivo y queda **pendiente de decisión del usuario**. Ningún CA aprobado lo exige.
+> Hoy la reserva USER usa `GET /availability` por fecha dentro del modal existente.
+>
+> **Decisión del usuario (2026-10-04): fuera del alcance de la entrega; se registra como mejora futura** (ver la wiki `decisions.md`). Ningún CA aprobado lo exige.
 
 Marcar `[x]` al completar. Contrato nuevo: `GET /api/v1/availability/days?locationId&specialtyId&from&to` (USER) → `[{date, slots}]`.
 

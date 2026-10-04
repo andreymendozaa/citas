@@ -45,10 +45,11 @@
 1. **HU-036:** abrir el túnel, actualizar la URL en WF-003 y ejecutarlo un día con citas `APPROVED` del mismo día. La cita sintética #10 es del 2026-10-05.
 2. **Merge `develop → main`** en los tres repos, con confirmación del usuario.
 3. **Sustentación técnica:** material opcional.
-4. **Decisiones abiertas:**
-   - el repo raíz es público, en contra de la regla de "dos repos";
-   - el calendario USER ("opción A") no está implementado.
-5. **Menores:**
+4. **Decidido el 2026-10-04:**
+   - el repo raíz `citas` sigue público (excepción de orquestación);
+   - el calendario USER ("opción A") queda fuera como mejora futura.
+5. **Mejoras futuras y menores:**
    - edición de especialidades en la UI;
+   - agregado diario por estado (B4);
    - el hash del seed no coincide con `Demo1234*`;
    - el usuario debe revocar el PAT de GitHub del 2026-09-29.
