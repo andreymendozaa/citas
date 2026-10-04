@@ -14,7 +14,12 @@
 | `citas-web` | `develop` | `940e1a3` feat(hu-011) | lint, Vitest 44/44 y build (2026-10-04) |
 | `citas` (raíz) | `develop` | ver `git log` | — |
 
-`main` sigue en S2 en los tres repos. **Decisión del usuario:** hacer el merge `develop → main` al final, después de HU-036, sin squash ni rebase y avisando antes del push.
+**Entrega final integrada en `main` (2026-10-04)** con un merge `--no-ff` de `develop`, sin squash ni rebase:
+- `citas` `995a816`;
+- `citas-api` `2739e9e`;
+- `citas-web` `9586ff9`.
+
+Al momento del merge, `main` tenía el mismo contenido que `develop`.
 
 ## Entregables por sesión
 
@@ -42,9 +47,9 @@
 
 ## Pendientes
 
-1. **HU-036:** abrir el túnel, actualizar la URL en WF-003 y ejecutarlo un día con citas `APPROVED` del mismo día. La cita sintética #10 es del 2026-10-05.
-2. **Merge `develop → main`** en los tres repos, con confirmación del usuario.
-3. **Sustentación técnica:** material opcional.
+1. ~~HU-036~~: cerrada con un día simulado (36/36).
+2. ~~Merge `develop → main`~~: hecho en los tres repos.
+3. ~~Sustentación técnica~~: `SUSTENTACION.md` en la raíz.
 4. **Decidido el 2026-10-04:**
    - el repo raíz `citas` sigue público (excepción de orquestación);
    - el calendario USER ("opción A") queda fuera como mejora futura.
