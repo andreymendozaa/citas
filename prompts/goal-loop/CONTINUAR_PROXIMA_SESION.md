@@ -16,6 +16,19 @@ Esos archivos son la fuente de verdad. Este prompt es solo un resumen operativo 
 
 **Idioma:** toda la retroalimentación y las preguntas al usuario van en español. Los mensajes de commit siguen en inglés, como el historial existente.
 
+## Actualización 2026-10-04
+
+- Estado vivo en `current-state.md` (raíz). Plan n8n corregido en `PLAN_IMPLEMENTACION_FLUJOS_N8N.md`.
+- `citas-api` `bd22790`:
+  - OpenAPI (HU-004 `Completada`) y `/actuator/health`;
+  - webhook real WF-002 con el evento `appointment.reschedule.decided`;
+  - Maven 72/72.
+- Decisiones del usuario sobre n8n:
+  - cuenta compartida: prefijo `Andrey` y no tocar lo ajeno;
+  - MCP propio;
+  - Gmail con su cuenta Google;
+  - túnel autorizado por el usuario, aunque los permisos del agente lo bloquearon y debe abrirse o permitirse explícitamente.
+
 ## Estado al cierre de la sesión del 2026-09-30
 
 ### Resumen
